@@ -30,3 +30,29 @@ resource "aws_volume_attachment" "unifi-data" {
 resource "aws_eip" "unifi-public" {
   instance = aws_instance.unifi.id
 }
+
+resource "aws_cloudwatch_metric_alarm" "instance_statuscheck" {
+  alarm_name          = "${aws_instance.unifi.id}_status"
+  alarm_description   = "EC2 Status Check"
+  comparison_operator = "GreaterThanOrEqualToThreshold"
+  evaluation_periods  = "2"
+  metric_name         = "StatusCheckFailed"
+  namespace           = "AWS/EC2"
+  period              = "300"
+  statistic           = "Maximum"
+  threshold           = "1.0"
+  dimensions = {
+    InstanceId = aws_instance.unifi.id
+  }
+  alarm_actions = [aws_sns_topic.cloudwatch_alarm.arn]
+}
+
+resource "aws_sns_topic" "cloudwatch_alarm" {
+  name = "cloudwatch_alarm"
+}
+
+resource "aws_sns_topic_subscription" "cloudwatch_alarm" {
+  topic_arn = aws_sns_topic.cloudwatch_alarm.arn
+  protocol  = "sms"
+  endpoint  = var.cloudwatch_alarm_sms_phone_number
+}

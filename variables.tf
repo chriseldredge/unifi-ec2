@@ -39,3 +39,7 @@ variable "server_name" {
 variable "admin_email" {
   description = "Email address for letsencrypt certbot"
 }
+
+variable "cloudwatch_alarm_sms_phone_number" {
+  description = "Phone number to send SMS alerts on status check alarms"
+}

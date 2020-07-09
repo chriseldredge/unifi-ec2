@@ -9,6 +9,10 @@ echo -e LABEL=unifi-data\\t/var/lib/unifi ext4 defaults,nofail 0 2 >> /etc/fstab
 systemctl daemon-reload
 mount /var/lib/unifi
 
+cat >/etc/default/unifi << 'EOF'
+JVM_MAX_HEAP_SIZE=768M
+EOF
+
 export DEBIAN_FRONTEND=noninteractive
 
 echo "deb http://www.ubnt.com/downloads/unifi/debian stable ubiquiti" | \

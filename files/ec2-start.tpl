@@ -22,13 +22,12 @@ swapon -a
 
 export DEBIAN_FRONTEND=noninteractive
 
-echo "deb http://www.ubnt.com/downloads/unifi/debian stable ubiquiti" | \
-  tee -a /etc/apt/sources.list
+echo 'deb https://www.ui.com/downloads/unifi/debian stable ubiquiti' | \
+  tee /etc/apt/sources.list.d/100-ubnt-unifi.list
 
 apt-key adv --keyserver keyserver.ubuntu.com --recv 06E85760C0A52C50
-
 apt-get update
-
+apt-mark hold 'openjdk-11-*'
 apt install -q -y unifi openjdk-8-jre-headless python-certbot-nginx
 
 cat >/etc/nginx/sites-available/default << 'EOF'

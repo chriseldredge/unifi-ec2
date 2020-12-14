@@ -6,12 +6,19 @@ fi
 
 mkdir /var/lib/unifi
 echo -e LABEL=unifi-data\\t/var/lib/unifi ext4 defaults,nofail 0 2 >> /etc/fstab
-systemctl daemon-reload
-mount /var/lib/unifi
 
 cat >/etc/default/unifi << 'EOF'
-JVM_MAX_HEAP_SIZE=768M
+JVM_MAX_HEAP_SIZE=64M
 EOF
+
+dd if=/dev/zero of=/swapfile bs=1M count=1024
+mkswap /swapfile
+chmod 600 /swapfile
+echo -e /swapfile\\t swap swap defaults 0 0 >> /etc/fstab
+
+systemctl daemon-reload
+mount /var/lib/unifi
+swapon -a
 
 export DEBIAN_FRONTEND=noninteractive
 

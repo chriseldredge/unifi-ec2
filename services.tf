@@ -9,6 +9,9 @@ resource "aws_instance" "unifi" {
     aws_security_group.ssh.name
   ]
   ebs_optimized = true
+  credit_specification {
+    cpu_credits = "standard"
+  }
   user_data = templatefile("files/ec2-start.tpl", {
     server_name = var.server_name,
     admin_email = var.admin_email
